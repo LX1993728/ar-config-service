@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 @RestController
 @RequestMapping("/test")
@@ -56,10 +58,10 @@ public class TestController {
             form.setFormId("formId_"+i);
 
             List<GlobalFormField> fields = new ArrayList<>();
-            fields.add( new GlobalFormField("name"+i,"zhansgan"+i,Boolean.TRUE,"",false,"姓名"+i));
-            fields.add( new GlobalFormField("age"+i,"1"+i,Boolean.TRUE,"",true,"年龄"+i));
-            fields.add( new GlobalFormField("sex"+i,"man"+i,Boolean.TRUE,"",false,"性别"+i));
-            fields.add( new GlobalFormField("qq"+i,"1332323"+i,Boolean.TRUE,"",false,"QQ"+i));
+            fields.add( new GlobalFormField("name"+i,"zhansgan"+i,Boolean.TRUE,"",false,"姓名"+i,1));
+            fields.add( new GlobalFormField("age"+i,"1"+i,Boolean.TRUE,"",true,"年龄"+i,2));
+            fields.add( new GlobalFormField("sex"+i,"man"+i,Boolean.TRUE,"",false,"性别"+i,3));
+            fields.add( new GlobalFormField("qq"+i,"1332323"+i,Boolean.TRUE,"",false,"QQ"+i,4));
 
             form.setFields(fields);
 
@@ -101,12 +103,18 @@ public class TestController {
            table.setTableId("TableId-"+i);
 
             List<GlobalTableField> fields = new ArrayList<>();
-            fields.add( new GlobalTableField("name"+i,"名称"+i,Boolean.TRUE,"姓名"+i));
-            fields.add( new GlobalTableField("age"+i,"年龄"+i,Boolean.TRUE,"年龄"+i));
-            fields.add( new GlobalTableField("sex"+i,"性别"+i,Boolean.TRUE,"性别"+i));
-            fields.add( new GlobalTableField("qq"+i,"QQ号"+i,Boolean.TRUE,"QQ"+i));
+            fields.add( new GlobalTableField("name"+i,"名称"+i,Boolean.TRUE,"姓名"+i,1));
+            fields.add( new GlobalTableField("age"+i,"年龄"+i,Boolean.TRUE,"年龄"+i,2));
+            fields.add( new GlobalTableField("sex"+i,"性别"+i,Boolean.TRUE,"性别"+i,3));
+            fields.add( new GlobalTableField("qq"+i,"QQ号"+i,Boolean.TRUE,"QQ"+i,4));
 
             table.setFields(fields);
+
+            List<GlobalTableChoosenField> choosenFields = new ArrayList<>();
+            choosenFields.add( new GlobalTableChoosenField("aaa"+i,"全选"+i,"全选"+i,1));
+            choosenFields.add( new GlobalTableChoosenField("bbb"+i,"条件"+i,"条件"+i,2));
+
+            table.setChoosenFields(choosenFields);
 
             generalService.persisent(table);
 

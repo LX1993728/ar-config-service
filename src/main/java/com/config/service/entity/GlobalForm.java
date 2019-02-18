@@ -5,8 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "GlobalForm")
@@ -34,8 +33,10 @@ public class GlobalForm implements Serializable {
     @ApiModelProperty("表单在当前系统的唯一ID")
     private String formId; //
 
+
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "forms_id",referencedColumnName = "id") // 为了方便现将主键维护权交给一的一方
+    @OrderBy("indexs ASC")
     private List<GlobalFormField> fields = new ArrayList<>();
 
     public Long getId() {
@@ -70,19 +71,19 @@ public class GlobalForm implements Serializable {
         this.formName = formName;
     }
 
-    public List<GlobalFormField> getFields() {
-        return fields;
-    }
-
-    public void setFields(List<GlobalFormField> fields) {
-        this.fields = fields;
-    }
-
     public String getFormId() {
         return formId;
     }
 
     public void setFormId(String formId) {
         this.formId = formId;
+    }
+
+    public List<GlobalFormField> getFields() {
+        return fields;
+    }
+
+    public void setFields(List<GlobalFormField> fields) {
+        this.fields = fields;
     }
 }

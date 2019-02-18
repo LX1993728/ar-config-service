@@ -2,11 +2,12 @@ package com.config.service.entity;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "GlobalTable")
@@ -38,7 +39,15 @@ public class GlobalTable implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "tables_id",referencedColumnName = "id") // 为了方便现将主键维护权交给一的一方
+    @OrderBy("indexs ASC")
     private List<GlobalTableField> fields = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @Fetch(FetchMode.SUBSELECT)
+    @JoinColumn(name = "tables_filter_id",referencedColumnName = "id")
+    @OrderBy("indexs ASC")
+    private List<GlobalTableChoosenField> choosenFields = new ArrayList<>();
+
 
     public Long getId() {
         return id;
@@ -94,5 +103,13 @@ public class GlobalTable implements Serializable {
 
     public void setFields(List<GlobalTableField> fields) {
         this.fields = fields;
+    }
+
+    public List<GlobalTableChoosenField> getChoosenFields() {
+        return choosenFields;
+    }
+
+    public void setChoosenFields(List<GlobalTableChoosenField> choosenFields) {
+        this.choosenFields = choosenFields;
     }
 }

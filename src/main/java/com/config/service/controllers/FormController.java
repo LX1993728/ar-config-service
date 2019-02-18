@@ -11,7 +11,9 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -120,4 +122,37 @@ public class FormController {
         return form;
     }
 
+
+    @ApiOperation(value = "根据FormId查询操作", tags = {""})
+    @PostMapping("/findByFormId")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "formId", value = "主键", required = true, paramType = "query", dataType = "Long"),
+            @ApiImplicitParam(name = "flag", value = "系统标识", required = true, paramType = "query", dataType = "String"),
+            @ApiImplicitParam(name = "prepositionId", value = "部委前置的ID标识", required = false, paramType = "query", dataType = "String")
+    })
+    public Object findByFormId(String formId, String flag, String prepositionId, HttpServletResponse response) throws Exception{
+
+        Map<String,Object> resultMap = new HashMap<>();
+        if (formId == null || formId.trim().length() == 0){
+            response.setStatus(400);
+            resultMap.put("isSuccess",false);
+            resultMap.put("message","formId cannot be null");
+            return resultMap;
+        }
+        Map<String,Object>  params = new HashMap<>();
+        params.put("formId",formId);
+        if (flag != null) {
+            params.put("flag", flag.trim());
+        }
+        if (prepositionId != null) {
+            params.put("prepositionId", prepositionId);
+        }
+        List<GlobalForm> list = (List<GlobalForm>) this.generalService.findByAttribute(GlobalForm.class, null, params);
+        if (list.size() > 0){
+            return list.get(0);
+        }else {
+            response.setStatus(404);
+            return "NOT FOUND";
+        }
+    }
 }

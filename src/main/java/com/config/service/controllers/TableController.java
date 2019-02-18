@@ -13,7 +13,9 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -120,6 +122,40 @@ public class TableController {
             return resultMap;
         }
         return table;
+    }
+
+
+    @ApiOperation(value = "根据tableId查询操作", tags = {""})
+    @PostMapping("/findByTableId")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "tableId", value = "主键", required = true, paramType = "query", dataType = "Long"),
+            @ApiImplicitParam(name = "flag", value = "系统标识", required = true, paramType = "query", dataType = "String"),
+            @ApiImplicitParam(name = "prepositionId", value = "部委前置的ID标识", required = false, paramType = "query", dataType = "String")
+    })
+    public Object findBytableId(String tableId,String flag, String prepositionId, HttpServletResponse response) throws Exception{
+
+        Map<String,Object> resultMap = new HashMap<>();
+        if (tableId == null || tableId.trim().length() == 0){
+            response.setStatus(400);
+            resultMap.put("isSuccess",false);
+            resultMap.put("message","id cannot be null");
+            return resultMap;
+        }
+        Map<String,Object>  params = new HashMap<>();
+        params.put("tableId",tableId);
+        if (flag != null) {
+            params.put("flag", flag.trim());
+        }
+        if (prepositionId != null) {
+            params.put("prepositionId", prepositionId);
+        }
+        final List<?> list = this.generalService.findByAttribute(GlobalTable.class, null, params);
+        if (list.size() > 0){
+            return list.get(0);
+        }else {
+            response.setStatus(404);
+            return "NOT FOUND";
+        }
     }
 
 }

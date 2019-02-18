@@ -1,6 +1,7 @@
 package com.config.service.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -10,24 +11,27 @@ import java.io.Serializable;
 @Entity
 @Table(name = "GlobalFormField")
 @ApiModel("表单字段类")
+@JsonIgnoreProperties // 为空的时候不进行序列化
 public class GlobalFormField implements Serializable {
     private static final long serialVersionUID = 1L;
 
     public GlobalFormField() {
     }
 
-    public GlobalFormField(String fieldName, String defaultValue, Boolean isRequire, String regex, Boolean isHidden, String description) {
+    public GlobalFormField(String fieldName, String defaultValue, Boolean isRequire, String regex, Boolean isHidden, String description,Integer indexs) {
         this.fieldName = fieldName;
         this.defaultValue = defaultValue;
         this.isRequire = isRequire;
         this.regex = regex;
         this.isHidden = isHidden;
         this.description = description;
+        this.indexs = indexs;
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ApiModelProperty("主键")
+    @JsonIgnore
     private Long id; // 主键ID
 
     @ManyToOne
@@ -37,6 +41,9 @@ public class GlobalFormField implements Serializable {
 
     @ApiModelProperty("字段名称")
     private String fieldName; // 字段名称
+
+    @ApiModelProperty("字段显示名称")
+    private String displayName; // 字段显示名称
 
     @ApiModelProperty("字段默认值")
     private String defaultValue; // 字段默认值
@@ -52,6 +59,8 @@ public class GlobalFormField implements Serializable {
 
     @ApiModelProperty("字段描述")
     private String description; // 字段描述
+
+    private Integer indexs; //排序字段
 
     public Long getId() {
         return id;
@@ -116,4 +125,21 @@ public class GlobalFormField implements Serializable {
     public void setGlobalForm(GlobalForm globalForm) {
         this.globalForm = globalForm;
     }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public Integer getindexs() {
+        return indexs;
+    }
+
+    public void setindexs(Integer indexs) {
+        this.indexs = indexs;
+    }
+
 }

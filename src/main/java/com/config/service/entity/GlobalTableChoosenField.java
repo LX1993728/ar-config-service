@@ -8,18 +8,17 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "GlobalTableField")
-@ApiModel("表格字段类")
-public class GlobalTableField implements Serializable {
+@Table(name = "GlobalTableChoosenField")
+@ApiModel("表格筛选字段类")
+public class GlobalTableChoosenField implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    public GlobalTableField() {
+    public GlobalTableChoosenField() {
     }
 
-    public GlobalTableField(String fieldName, String displayName, Boolean isHidden, String description,Integer indexs) {
+    public GlobalTableChoosenField(String fieldName, String displayName,String description, Integer indexs) {
         this.fieldName = fieldName;
         this.displayName = displayName;
-        this.isHidden = isHidden;
         this.description = description;
         this.indexs = indexs;
     }
@@ -30,22 +29,23 @@ public class GlobalTableField implements Serializable {
     private Long id; // 主键ID
 
     @ManyToOne
-    @JoinColumn(name = "tables_id",referencedColumnName = "id") // 为了方便现将主键维护权交给一的一方
+    @JoinColumn(name = "tables_filter_id",referencedColumnName = "id") // 为了方便现将主键维护权交给一的一方
     @JsonIgnore
     private GlobalTable globalTable;
 
     @ApiModelProperty("字段名称")
     private String fieldName; // 字段名称
 
-    @ApiModelProperty("表头展示名称")
-    private String displayName; // 表头展示名称
-
-    @ApiModelProperty("是否隐藏")
-    private Boolean isHidden; // 是否隐藏
+    @ApiModelProperty("筛选展示名称")
+    private String displayName; // 筛选展示名称
 
     @ApiModelProperty("字段描述")
     private String description; // 字段描述
 
+    @ApiModelProperty("是否勾选")
+    private Boolean isChoosen=false; // 是否勾选
+
+    @ApiModelProperty("排序字段")
     private Integer indexs; //排序字段
 
     public Long getId() {
@@ -80,14 +80,6 @@ public class GlobalTableField implements Serializable {
         this.displayName = displayName;
     }
 
-    public Boolean getHidden() {
-        return isHidden;
-    }
-
-    public void setHidden(Boolean hidden) {
-        isHidden = hidden;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -96,11 +88,19 @@ public class GlobalTableField implements Serializable {
         this.description = description;
     }
 
-    public Integer getindexs() {
+    public Boolean getChoosen() {
+        return isChoosen;
+    }
+
+    public void setChoosen(Boolean choosen) {
+        isChoosen = choosen;
+    }
+
+    public Integer getIndexs() {
         return indexs;
     }
 
-    public void setindexs(Integer indexs) {
+    public void setIndexs(Integer indexs) {
         this.indexs = indexs;
     }
 

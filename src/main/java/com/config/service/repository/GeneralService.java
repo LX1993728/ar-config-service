@@ -210,4 +210,38 @@ public class GeneralService {
         em.createQuery(resultSqlBuffer.toString()).executeUpdate();
     }
 
+    /**
+     *
+     * @param parent
+     * @param target
+     * @param params
+     * @return
+     * @throws Exception
+     */
+    public List<?> findByAttribute( Class<?> parent, Class<?> target, Map<String, Object> params) throws Exception{
+        String parentName = parent.getSimpleName();
+        String targetName = target != null ? target.getSimpleName() : null;
+        StringBuffer resultSqlBuffer = new StringBuffer();
+        String token = (params == null || params.keySet().size() == 0) ? "" : (targetName == null ? " WHERE " : " AND ");
+        resultSqlBuffer.append("SELECT  a FROM " + parentName + " a " + (targetName != null ? ("  WHERE a.class=" + targetName) : "") + token);
+
+        if (params != null) {
+            int entryCount = 0;
+            for (Entry<String, Object> entry : params.entrySet()) {
+                entryCount++;
+                final String attribute = entry.getKey();
+                String sqlMiddle;
+                if(entry.getValue() != null){
+                    final String value = (entry.getValue() instanceof String) ? "'" + entry.getValue() + "'" : entry.getValue().toString();
+                    sqlMiddle  = "a." + attribute + "=" + value + " " + (entryCount == params.keySet().size() ? "" : " AND ");
+                }else {
+                    sqlMiddle = "a." + attribute + "  IS NULL " + (entryCount == params.keySet().size() ? "" : " AND ");
+                }
+                resultSqlBuffer.append(sqlMiddle);
+            }
+        }
+        final List<?> resultList = em.createQuery(resultSqlBuffer.toString(), parent).getResultList();
+        return resultList;
+    }
+
 }
